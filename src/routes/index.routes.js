@@ -4,7 +4,7 @@ import usersRouter from "./users.routes.js";
 
 const router = Router()
 
-router.use(transactionsRouter);
 router.use(usersRouter);
+router.use(transactionsRouter);
 
 export default router;
