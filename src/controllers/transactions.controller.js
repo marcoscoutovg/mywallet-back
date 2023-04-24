@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
 import { db } from "../database/database.connection.js";
 import { operationSchema } from "../schemas/transactions.schemas.js";
@@ -21,7 +22,13 @@ export async function postNovaTransacao(req, res) {
     try {
 
         const infoUser = await db.collection("users").findOne({ _id: new ObjectId(session.userId) })
-        await db.collection("transactions").insertOne({ userId: session.userId, value, description, tipo, date: dayjs().format("DD/MM") })
+        await db.collection("transactions").insertOne({
+            userId: session.userId,
+            value,
+            description,
+            tipo,
+            date: dayjs().format("DD/MM")
+        })
 
         res.sendStatus(201)
     } catch (err) {
