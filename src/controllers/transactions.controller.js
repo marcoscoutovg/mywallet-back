@@ -21,12 +21,9 @@ export async function postNovaTransacao(req, res) {
     try {
 
         const infoUser = await db.collection("users").findOne({ _id: new ObjectId(session.userId) })
-        await db.collection("transactions").insertOne({ userId: session.userId, value, description, tipo })
+        await db.collection("transactions").insertOne({ userId: session.userId, value, description, tipo, date: dayjs().format("DD/MM") })
 
-        const arr = await db.collection("transactions").find().toArray()
-        // arranjar um jeito de encontrar apenas pelo id
-
-        res.status(201).send(arr)
+        res.sendStatus(201)
     } catch (err) {
         res.status(500).send(err.message)
     }
