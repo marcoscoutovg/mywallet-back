@@ -12,15 +12,14 @@ export async function postNovaTransacao(req, res) {
     const token = authorization?.replace("Bearer ", "")
     const session = await db.collection("sessions").findOne({ token })
 
-    if (!token) return res.sendStatus(401)
-    if (!session) return res.sendStatus(401)
+    if (!token) return res.status(401).send("Acesso não autorizado")
+    if (!session) return res.status(401).send("Sem permissão para adicionar transações")
     if (validation.error) {
         const errors = validation.error.details.map(detail => detail.message);
         return res.status(422).send(errors);
     }
 
     try {
-
         const infoUser = await db.collection("users").findOne({ _id: new ObjectId(session.userId) })
         await db.collection("transactions").insertOne({
             userId: session.userId,
@@ -42,8 +41,8 @@ export async function getHome(req, res) {
     const token = authorization?.replace("Bearer ", "")
     const session = await db.collection("sessions").findOne({ token })
 
-    if (!token) return res.sendStatus(401)
-    if (!session) return res.sendStatus(401)
+    if (!token) return res.status(401).send("Acesso não autorizado")
+    if (!session) return res.status(401).send("Sem permissão para acessar as transações")
 
     try {
         const transactions = await db.collection("transactions").find({ userId: new ObjectId(session.userId) }).toArray()
